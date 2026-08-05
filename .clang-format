@@ -1,0 +1,69 @@
+###############################################################################
+# Myelix
+# Clang-Format Configuration
+#
+# Target:
+#   - C++20
+#   - Qt 6.11
+#   - MSVC
+#   - Visual Studio 2022
+###############################################################################
+
+BasedOnStyle: LLVM
+Language: Cpp
+
+Standard: Latest
+
+IndentWidth: 4
+ContinuationIndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
+ColumnLimit: 100
+
+AccessModifierOffset: -4
+
+IndentCaseLabels: true
+
+BreakBeforeBraces: Allman
+
+AllowShortBlocksOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+
+NamespaceIndentation: All
+
+PointerAlignment: Left
+ReferenceAlignment: Left
+
+SpaceBeforeParens: ControlStatements
+
+AlignAfterOpenBracket: Align
+AlignOperands: true
+AlignTrailingComments: true
+
+SortIncludes: true
+IncludeBlocks: Regroup
+
+EmptyLineBeforeAccessModifier: LogicalBlock
+
+FixNamespaceComments: true
+
+ReflowComments: true
+
+IndentPPDirectives: None
+
+Cpp11BracedListStyle: true
+
+DerivePointerAlignment: false
+
+AlwaysBreakTemplateDeclarations: Yes
+
+PackConstructorInitializers: Never
+
+SeparateDefinitionBlocks: Always
+
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+MaxEmptyLinesToKeep: 1
