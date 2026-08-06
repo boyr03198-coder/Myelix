@@ -5,14 +5,12 @@ on:
     branches:
       - main
       - develop
-
   pull_request:
     branches:
       - main
       - develop
-
   schedule:
-    - cron: '0 3 * * 0'
+    - cron: "0 3 * * 0"
 
 permissions:
   actions: read
@@ -21,7 +19,7 @@ permissions:
 
 jobs:
   analyze:
-    name: Analyze
+    name: CodeQL Analysis
     runs-on: windows-2022
 
     strategy:
@@ -34,28 +32,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: 6.11.1
-          host: windows
-          target: desktop
-          arch: win64_msvc2022_64
+          version: "6.11.1"
+          arch: "win64_msvc2022_64"
           cache: true
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ matrix.language }}
-
       - name: Configure
-        run: cmake --preset vs2022-ci
+        run: |
+          cmake --fresh --preset vs2022-ci
 
       - name: Build
-        run: cmake --build --preset build-ci-debug
+        run: |
+          cmake --build --preset build-ci-debug
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
