@@ -86,7 +86,7 @@ jobs:
           Write-Host "Found $exe"
 
       - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Myelix-${{ matrix.configuration }}
           path: Build/VS2022/bin/${{ matrix.configuration }}/Myelix.exe
