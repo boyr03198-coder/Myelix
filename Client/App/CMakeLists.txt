@@ -12,8 +12,12 @@ qt_standard_project_setup()
 
 qt_add_executable(MyelixApp
     WIN32
+
     Src/main.cpp
+    Src/Application.cpp
     Src/MainWindow.cpp
+
+    Include/Myelix/App/Application.hpp
     Include/Myelix/App/MainWindow.hpp
 )
 
@@ -24,6 +28,10 @@ target_include_directories(MyelixApp
 
 target_link_libraries(MyelixApp
     PRIVATE
+        MyelixCore
+        MyelixUI
+        MyelixSecurity
+
         Qt6::Core
         Qt6::Gui
         Qt6::Widgets

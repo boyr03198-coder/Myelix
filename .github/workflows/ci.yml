@@ -1,0 +1,74 @@
+name: Myelix CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feature/**
+  pull_request:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration:
+          - Debug
+          - Release
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: 6.11.1
+          host: windows
+          target: desktop
+          arch: win64_msvc2022_64
+          cache: true
+
+      - name: Configure
+        run: |
+          if ("${{ matrix.configuration }}" -eq "Debug") {
+            cmake --preset vs2022-ci
+          } else {
+            cmake --preset vs2022-ci
+          }
+        shell: pwsh
+
+      - name: Build
+        run: |
+          if ("${{ matrix.configuration }}" -eq "Debug") {
+            cmake --build --preset build-ci-debug
+          } else {
+            cmake --build --preset build-ci-release
+          }
+        shell: pwsh
+
+      - name: Upload executable
+        if: matrix.configuration == 'Release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Myelix-Release
+          path: Build/VS2022/bin/Release/Myelix.exe
+
+      - name: Upload libraries
+        if: matrix.configuration == 'Release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Myelix-Libraries
+          path: Build/VS2022/lib/Release/

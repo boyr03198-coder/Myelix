@@ -1,4 +1,5 @@
-#include "Myelix/App/MainWindow.hpp"
+#include "Myelix/App/Application.hpp"
+#include "Myelix/Core/Logging/Logger.hpp"
 
 #include <QApplication>
 
@@ -6,9 +7,18 @@ int main(int argc, char* argv[])
 {
     QApplication application(argc, argv);
 
-    Myelix::App::MainWindow window;
+    Myelix::Core::Logging::Logger logger;
 
-    window.show();
+    logger.Log(Myelix::Core::Logging::LogLevel::Info, "Application",
+               "========================================");
 
-    return application.exec();
+    logger.Log(Myelix::Core::Logging::LogLevel::Info, "Application", "Starting Myelix");
+
+    Myelix::App::Application myelix(application);
+
+    const int result = myelix.Run();
+
+    logger.Log(Myelix::Core::Logging::LogLevel::Info, "Application", "Application exited.");
+
+    return result;
 }

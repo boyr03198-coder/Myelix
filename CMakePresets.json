@@ -1,51 +1,167 @@
 {
   "version": 6,
+
   "cmakeMinimumRequired": {
     "major": 3,
     "minor": 25,
     "patch": 0
   },
+
   "configurePresets": [
     {
       "name": "base",
       "hidden": true,
+
       "generator": "Visual Studio 17 2022",
+
       "architecture": {
         "value": "x64",
         "strategy": "external"
       },
+
       "binaryDir": "${sourceDir}/Build/VS2022",
+
+      "installDir": "${sourceDir}/Build/Install",
+
       "cacheVariables": {
+        "CMAKE_PREFIX_PATH": "C:/Qt/6.11.1/msvc2022_64",
+
         "CMAKE_CXX_STANDARD": "20",
-        "CMAKE_PREFIX_PATH": "C:/Qt/6.11.1/msvc2022_64"
+        "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+        "CMAKE_CXX_EXTENSIONS": "OFF",
+
+        "MYELIX_BUILD_TESTS": "ON",
+        "MYELIX_BUILD_SERVER": "OFF",
+
+        "MYELIX_WARNINGS_AS_ERRORS": "OFF",
+        "MYELIX_ENABLE_ANALYZE": "OFF",
+        "MYELIX_ENABLE_CLANG_TIDY": "OFF"
       }
     },
+
     {
       "name": "vs2022-debug",
       "displayName": "Visual Studio 2022 - Debug",
-      "inherits": "base",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
-      }
+      "inherits": "base"
     },
+
     {
       "name": "vs2022-release",
       "displayName": "Visual Studio 2022 - Release",
+      "inherits": "base"
+    },
+
+    {
+      "name": "vs2022-ci",
+      "displayName": "Visual Studio 2022 - CI",
       "inherits": "base",
+
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
+        "MYELIX_WARNINGS_AS_ERRORS": "ON"
+      }
+    },
+
+    {
+      "name": "vs2022-analyze",
+      "displayName": "Visual Studio 2022 - Static Analysis",
+      "inherits": "base",
+
+      "cacheVariables": {
+        "MYELIX_ENABLE_ANALYZE": "ON"
+      }
+    },
+
+    {
+      "name": "vs2022-clang-tidy",
+      "displayName": "Visual Studio 2022 - clang-tidy",
+      "inherits": "base",
+
+      "cacheVariables": {
+        "MYELIX_ENABLE_CLANG_TIDY": "ON"
+      }
+    },
+
+    {
+      "name": "vs2022-ci-analyze",
+      "displayName": "Visual Studio 2022 - CI + Analysis",
+      "inherits": "base",
+
+      "cacheVariables": {
+        "MYELIX_WARNINGS_AS_ERRORS": "ON",
+        "MYELIX_ENABLE_ANALYZE": "ON",
+        "MYELIX_ENABLE_CLANG_TIDY": "ON"
       }
     }
   ],
+
   "buildPresets": [
     {
       "name": "build-debug",
+      "displayName": "Build Debug",
       "configurePreset": "vs2022-debug",
       "configuration": "Debug"
     },
+
     {
       "name": "build-release",
+      "displayName": "Build Release",
       "configurePreset": "vs2022-release",
+      "configuration": "Release"
+    },
+
+    {
+      "name": "build-ci-debug",
+      "displayName": "Build CI Debug",
+      "configurePreset": "vs2022-ci",
+      "configuration": "Debug"
+    },
+
+    {
+      "name": "build-ci-release",
+      "displayName": "Build CI Release",
+      "configurePreset": "vs2022-ci",
+      "configuration": "Release"
+    },
+
+    {
+      "name": "build-analyze-debug",
+      "displayName": "Build Analyze Debug",
+      "configurePreset": "vs2022-analyze",
+      "configuration": "Debug"
+    },
+
+    {
+      "name": "build-analyze-release",
+      "displayName": "Build Analyze Release",
+      "configurePreset": "vs2022-analyze",
+      "configuration": "Release"
+    },
+
+    {
+      "name": "build-clang-tidy-debug",
+      "displayName": "Build clang-tidy Debug",
+      "configurePreset": "vs2022-clang-tidy",
+      "configuration": "Debug"
+    },
+
+    {
+      "name": "build-clang-tidy-release",
+      "displayName": "Build clang-tidy Release",
+      "configurePreset": "vs2022-clang-tidy",
+      "configuration": "Release"
+    },
+
+    {
+      "name": "build-ci-analyze-debug",
+      "displayName": "Build CI Analyze Debug",
+      "configurePreset": "vs2022-ci-analyze",
+      "configuration": "Debug"
+    },
+
+    {
+      "name": "build-ci-analyze-release",
+      "displayName": "Build CI Analyze Release",
+      "configurePreset": "vs2022-ci-analyze",
       "configuration": "Release"
     }
   ]

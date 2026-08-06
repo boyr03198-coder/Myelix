@@ -1,0 +1,46 @@
+name: Static Analysis
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: windows-2022
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: 6.11.1
+          host: windows
+          target: desktop
+          arch: win64_msvc2022_64
+          cache: true
+
+      - name: Configure (/analyze)
+        run: cmake --preset vs2022-analyze
+        shell: pwsh
+
+      - name: Build
+        run: cmake --build --preset build-analyze-debug
+        shell: pwsh
+
+      - name: Configure (clang-tidy)
+        run: cmake --preset vs2022-clang-tidy
+        shell: pwsh
+
+      - name: Build
+        run: cmake --build --preset build-clang-tidy-debug
+        shell: pwsh
