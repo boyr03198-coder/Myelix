@@ -1,0 +1,87 @@
+version: 2
+
+updates:
+
+  # ==========================================================================
+  # GitHub Actions
+  # ==========================================================================
+
+  - package-ecosystem: "github-actions"
+
+    directory: "/"
+
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+
+    open-pull-requests-limit: 10
+
+    labels:
+      - dependencies
+      - github-actions
+
+    commit-message:
+      prefix: "ci"
+
+  # ==========================================================================
+  # NuGet (future)
+  # ==========================================================================
+
+  - package-ecosystem: "nuget"
+
+    directory: "/"
+
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:30"
+
+    open-pull-requests-limit: 10
+
+    labels:
+      - dependencies
+      - nuget
+
+    commit-message:
+      prefix: "deps"
+
+  # ==========================================================================
+  # Docker (future)
+  # ==========================================================================
+
+  - package-ecosystem: "docker"
+
+    directory: "/"
+
+    schedule:
+      interval: "monthly"
+
+    open-pull-requests-limit: 5
+
+    labels:
+      - dependencies
+      - docker
+
+    commit-message:
+      prefix: "docker"
+
+  # ==========================================================================
+  # Dev Containers (future)
+  # ==========================================================================
+
+  - package-ecosystem: "devcontainers"
+
+    directory: "/"
+
+    schedule:
+      interval: "monthly"
+
+    open-pull-requests-limit: 5
+
+    labels:
+      - dependencies
+      - devcontainer
+
+    commit-message:
+      prefix: "devcontainer"
