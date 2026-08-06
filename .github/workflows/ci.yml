@@ -1,11 +1,12 @@
-name: Myelix CI
+name: CI
 
 on:
   push:
     branches:
       - main
       - develop
-      - feature/**
+      - "feature/**"
+
   pull_request:
     branches:
       - main
@@ -14,20 +15,32 @@ on:
 permissions:
   contents: read
 
+env:
+  QT_VERSION: ${{ vars.QT_VERSION }}
+  QT_HOST: ${{ vars.QT_HOST }}
+  QT_TARGET: ${{ vars.QT_TARGET }}
+  QT_ARCH: ${{ vars.QT_ARCH }}
+
 jobs:
   build:
+    name: Build (${{ matrix.configuration }})
     runs-on: windows-2022
 
     strategy:
       fail-fast: false
+
       matrix:
         configuration:
           - Debug
           - Release
 
     steps:
-      - name: Checkout
+
+      - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
 
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
@@ -35,40 +48,46 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: 6.11.1
-          host: windows
-          target: desktop
-          arch: win64_msvc2022_64
+          version: ${{ env.QT_VERSION }}
+          host: ${{ env.QT_HOST }}
+          target: ${{ env.QT_TARGET }}
+          arch: ${{ env.QT_ARCH }}
           cache: true
 
-      - name: Configure
+      - name: Show Qt Version
+        shell: cmd
         run: |
-          if ("${{ matrix.configuration }}" -eq "Debug") {
-            cmake --preset vs2022-ci
-          } else {
-            cmake --preset vs2022-ci
-          }
+          echo Qt Version: %QT_VERSION%
+
+      - name: Configure CMake
         shell: pwsh
+        run: |
+          cmake --fresh --preset vs2022-ci
 
       - name: Build
+        shell: pwsh
         run: |
           if ("${{ matrix.configuration }}" -eq "Debug") {
-            cmake --build --preset build-ci-debug
-          } else {
-            cmake --build --preset build-ci-release
+              cmake --build --preset build-ci-debug --config Debug
           }
-        shell: pwsh
+          else {
+              cmake --build --preset build-ci-release --config Release
+          }
 
-      - name: Upload executable
-        if: matrix.configuration == 'Release'
+      - name: Verify Executable
+        shell: powershell
+        run: |
+          $exe = "Build/VS2022/bin/${{ matrix.configuration }}/Myelix.exe"
+
+          if (!(Test-Path $exe)) {
+              throw "Build failed. Executable not found: $exe"
+          }
+
+          Write-Host "Found $exe"
+
+      - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Myelix-Release
-          path: Build/VS2022/bin/Release/Myelix.exe
-
-      - name: Upload libraries
-        if: matrix.configuration == 'Release'
-        uses: actions/upload-artifact@v4
-        with:
-          name: Myelix-Libraries
-          path: Build/VS2022/lib/Release/
+          name: Myelix-${{ matrix.configuration }}
+          path: Build/VS2022/bin/${{ matrix.configuration }}/Myelix.exe
+          if-no-files-found: error

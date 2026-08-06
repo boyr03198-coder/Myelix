@@ -1,0 +1,20 @@
+name: Shared Variables
+
+on:
+  workflow_call:
+    outputs:
+      qt-version:
+        description: Qt version used by all workflows
+        value: "6.10.0"
+
+      qt-arch:
+        description: Qt architecture
+        value: "win64_msvc2022_64"
+
+      qt-host:
+        description: Qt host
+        value: "windows"
+
+      qt-target:
+        description: Qt target
+        value: "desktop"
