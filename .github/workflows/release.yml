@@ -54,7 +54,7 @@ jobs:
           }
 
       - name: Upload Release Assets
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             Build/VS2022/bin/Release/Myelix.exe
